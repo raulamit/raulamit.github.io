@@ -28,9 +28,6 @@ jQuery(function ($) {
         $('#tt-preloader').delay(350).fadeOut('slow');
     });
 
-
-
-
     // -------------------------------------------------------------
     // Animated scrolling / Scroll Up
     // -------------------------------------------------------------
@@ -286,37 +283,75 @@ jQuery(function ($) {
     // Contact Form
     // -------------------------------------------------------------
 
-    $('#contactForm').on('submit',function(e){
+    // $('#contactForm').on('submit',function(e){
+    //
+    //     e.preventDefault();
+    //
+    //     var $action = $(this).prop('action');
+    //     var $data = $(this).serialize();
+    //     var $this = $(this);
+    //
+    //     $this.prevAll('.alert').remove();
+    //
+    //     $.post( $action, $data, function( data ) {
+    //
+    //         if( data.response=='error' ){
+    //
+    //             $this.before( '<div class="alert alert-danger">'+data.message+'</div>' );
+    //         }
+    //
+    //         if( data.response=='success' ){
+    //
+    //             $this.before( '<div class="alert alert-success">'+data.message+'</div>' );
+    //             $this.find('input, textarea').val('');
+    //         }
+    //
+    //     }, "json");
+    //
+    // });
 
-        e.preventDefault();
+    //Send email on form submission
+    $('#contactForm').submit(function(e){
+        var name = $('#name').val();
+        var email = $('#email').val();
+        var message = $('#message').val();
 
-        var $action = $(this).prop('action');
-        var $data = $(this).serialize();
-        var $this = $(this);
-
-        $this.prevAll('.alert').remove();
-
-        $.post( $action, $data, function( data ) {
-
-            if( data.response=='error' ){
-
-                $this.before( '<div class="alert alert-danger">'+data.message+'</div>' );
-            }
-
-            if( data.response=='success' ){
-
-                $this.before( '<div class="alert alert-success">'+data.message+'</div>' );
-                $this.find('input, textarea').val('');
-            }
-
-        }, "json");
-
-    });
-
-
+        if(name==='' || email==='' || message ===''){
+            return false
+        }
+        else{
+            e.preventDefault();
+            console.log("success");
+            $.ajax({
+                url: "https://formspree.io/raul.am@husky.neu.edu",
+                method: "POST",
+                data: {
+                    name: name,
+                    email: email,
+                    message : message
+                },
+                dataType: "json",
+                success: function(){
+                    $('#name').val('');
+                    $('#email').val('');
+                    $('#message').val('');
+                    $("#submit-success-record").html('Successfully submitted!');
+                    $("#submit-success-record").addClass("alert alert-success");
+                    $("#submit-success-record").fadeOut(5000);
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    console.log(thrownError);
+                    $("#submit-success-record").html('There was some error. Please try again!');
+                    $("#submit-success-record").addClass("alert alert-danger");
+                }
+            });
+        }
+    })
 
 
 });
+
+
 
 
 
